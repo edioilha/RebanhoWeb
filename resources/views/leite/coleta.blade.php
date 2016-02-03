@@ -6,6 +6,15 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<h3 class="page-header">Calend&#225;rio de Coleta</h3>
+				@if(count($errors) > 0)
+				<div class="alert alert-danger">
+					<ul>
+					@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+					@endforeach
+					</ul>
+				</div>
+				@endif
 				<div class="panel panel-default">
 					<div class="panel-heading text-center">
 						<div class="row">

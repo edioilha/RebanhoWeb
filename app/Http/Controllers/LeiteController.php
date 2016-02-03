@@ -4,8 +4,9 @@ namespace rebanhoweb\Http\Controllers;
 
 use DB;
 use Request;
+use rebanhoweb\Leite;
 
-use rebanhoweb\Http\Requests;
+use rebanhoweb\Http\Requests\LeiteRequest;
 use rebanhoweb\Http\Controllers\Controller;
 
 class LeiteController extends Controller
@@ -41,6 +42,14 @@ class LeiteController extends Controller
 			return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		
 		return $litros;
+	}
+	
+	public function adiciona(LeiteRequest $request)
+	{
+		Leite::create($request->all());
+		$data = explode("-",Request::input('data'));
+		
+		return redirect("/leite/coleta/".$data[1]."/".$data[0]."");
 	}
 	
 	public function coleta($month = null, $year = null)
@@ -94,17 +103,18 @@ class LeiteController extends Controller
             $calendar .= "<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>";
             $calendar .= "<h4 class='modal-title' id='myModalLabel'>Coleta de leite</h4>";
             $calendar .= "</div>";
-			$calendar .= "<form action='#' method='post'>";
+			$calendar .= "<form action='/rebanhoweb/leite/adiciona' method='post'>";
             $calendar .= "<div class='modal-body'>";
             $calendar .= "<div class='form-group'>";
             $calendar .= "<label>Litros Coletados em ".date('d/m/Y',strtotime($data))."</label>";
-            $calendar .= "<input class='form-control' id='n4' placeholder='' name='litros'>";
-			$calendar .= "<input type='hidden' name='dt' value='".$data."'>";
+            $calendar .= "<input type='hidden' name='data' value='".$data."'>";
+			$calendar .= "<input class='form-control' placeholder='".$this->getLitros($data)."' name='litros'>";			
+			$calendar .= "<input type='hidden' name='_token' value='".csrf_token()."'>";
             $calendar .= "</div>";
             $calendar .= "</div>";
             $calendar .= "<div class='modal-footer'>";
             $calendar .= "<button type='button' class='btn btn-default' data-dismiss='modal'>Fechar</button>";                        
-			$calendar .= "<button type='submit' class='btn btn-primary' formaction=''>Salvar</button>";
+			$calendar .= "<button type='submit' class='btn btn-primary'>Salvar</button>";
 			$calendar .= "</form>";
             $calendar .= "</div>";
             $calendar .= "</div>";

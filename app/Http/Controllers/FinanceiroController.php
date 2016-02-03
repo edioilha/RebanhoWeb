@@ -9,5 +9,8 @@ use rebanhoweb\Http\Controllers\Controller;
 
 class FinanceiroController extends Controller
 {
-    //
+    public function index()
+	{
+		return view('financeiro.index');
+	}
 }
