@@ -35,18 +35,37 @@ class LeiteController extends Controller
 		}
 	}
 	
-	public function getLitros($data)
+	public function litros($data)
 	{
-		$litros = DB::table('leite')->where('data',$data)->value('litros');
-		if(empty($litros))
-			return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		
+		$litros = Leite::where('data',$data)->value('litros');
+				
 		return $litros;
 	}
 	
+	public function soma($date)
+	{
+		$mes = date('Y-m',$date)."%";
+		$soma = Leite::where('data','like',$mes)->sum('litros');
+		
+		return number_format($soma,0,"",".");
+	}
+		
 	public function adiciona(LeiteRequest $request)
 	{
-		Leite::create($request->all());
+		$litros = Leite::where('data',Request::input('data'))->value('litros');
+		
+		if($litros==0)
+		{
+			Leite::where('data',Request::input('data'))->delete();
+		}
+		else
+		{
+			if(empty($litros))
+				Leite::create($request->all());			
+			if($litros>0)
+				Leite::where('data',Request::input('data'))->update(['litros'=>Request::input('litros')]);
+		}
+				
 		$data = explode("-",Request::input('data'));
 		
 		return redirect("/leite/coleta/".$data[1]."/".$data[0]."");
@@ -93,9 +112,12 @@ class LeiteController extends Controller
 				$rows++;
 			}
 			$data = $year."-".$month."-".$day;
-			$calendar .= "<td align='center'><button class='btn btn-outline btn-primary' data-toggle='modal' data-target='#modal".$day."'>";
+			$litros = $this->litros($data);
+            if(empty($litros))
+                $litros = "&nbsp;&nbsp;";
+			$calendar .= "<td align='center'><button class='btn btn-outline btn-primary btn-block' data-toggle='modal' data-target='#modal".$day."'>";
 			$calendar .= $day;
-			$calendar .= "</br>".$this->getLitros($data)."</button></td>";
+			$calendar .= "</br>".$litros."</button></td>";
 			$calendar .= "<div class='modal fade' id='modal".$day."' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>";
             $calendar .= "<div class='modal-dialog'>";
             $calendar .= "<div class='modal-content'>";
@@ -103,12 +125,12 @@ class LeiteController extends Controller
             $calendar .= "<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>";
             $calendar .= "<h4 class='modal-title' id='myModalLabel'>Coleta de leite</h4>";
             $calendar .= "</div>";
-			$calendar .= "<form action='/rebanhoweb/leite/adiciona' method='post'>";
+			$calendar .= "<form action='".asset('/leite/adiciona')."' method='post'>";
             $calendar .= "<div class='modal-body'>";
             $calendar .= "<div class='form-group'>";
             $calendar .= "<label>Litros Coletados em ".date('d/m/Y',strtotime($data))."</label>";
             $calendar .= "<input type='hidden' name='data' value='".$data."'>";
-			$calendar .= "<input class='form-control' placeholder='".$this->getLitros($data)."' name='litros'>";			
+			$calendar .= "<input class='form-control' placeholder='".$this->litros($data)."' name='litros'>";			
 			$calendar .= "<input type='hidden' name='_token' value='".csrf_token()."'>";
             $calendar .= "</div>";
             $calendar .= "</div>";
@@ -128,6 +150,7 @@ class LeiteController extends Controller
 		}
 			
 		return view('leite.coleta')->withColeta($calendar)->withPrevmonth($prev_month)->withPrevyear($prev_year)
-									->withNextmonth($next_month)->withNextyear($next_year)->withData($this->FormataMes($date));
+									->withNextmonth($next_month)->withNextyear($next_year)->withData($this->FormataMes($date))
+									->withSoma($this->soma($date));
 	}
 }

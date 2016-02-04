@@ -7,7 +7,8 @@
 			<div class="col-lg-12">
 				<h3 class="page-header">Calend&#225;rio de Coleta</h3>
 				@if(count($errors) > 0)
-				<div class="alert alert-danger">
+				<div class="alert alert-danger alert-dismissable">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 					<ul>
 					@foreach ($errors->all() as $error)
 					<li>{{ $error }}</li>
@@ -23,7 +24,7 @@
 									class="glyphicon glyphicon-arrow-left"></span></a>
 							</div>
 							<div class="col-md-6 col-xs-4">
-								<strong>{{$data}}</strong>
+								<strong>{{$data}}</br>Total: {{$soma}} litros</strong>
 							</div>
 							<div class="col-md-3 col-xs-4">
 								<a class="btn btn-default btn-sm" href="{{asset('leite/coleta')}}/{{$nextmonth}}/{{$nextyear}}"><span
