@@ -52,18 +52,22 @@ class LeiteController extends Controller
 		
 	public function adiciona(LeiteRequest $request)
 	{
-		$litros = Leite::where('data',Request::input('data'))->value('litros');
+		$registros = Leite::where('data',Request::input('data'))->count();
 		
-		if($litros==0)
+		if(Request::input('litros')==0)
 		{
 			Leite::where('data',Request::input('data'))->delete();
 		}
 		else
 		{
-			if(empty($litros))
-				Leite::create($request->all());			
-			if($litros>0)
+			if($registros==0)
+			{
+				Leite::create($request->all());
+			}
+			else
+			{
 				Leite::where('data',Request::input('data'))->update(['litros'=>Request::input('litros')]);
+			}
 		}
 				
 		$data = explode("-",Request::input('data'));
