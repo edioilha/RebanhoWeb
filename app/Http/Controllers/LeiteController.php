@@ -139,7 +139,7 @@ class LeiteController extends Controller
             $calendar .= "</div>";
             $calendar .= "</div>";
             $calendar .= "<div class='modal-footer'>";
-            $calendar .= "<button type='button' class='btn btn-default' data-dismiss='modal'>Fechar</button>";                        
+            $calendar .= "<button type='button' class='btn btn-default' data-dismiss='modal'>Fechar</button>";                    
 			$calendar .= "<button type='submit' class='btn btn-primary'>Salvar</button>";
 			$calendar .= "</form>";
             $calendar .= "</div>";
