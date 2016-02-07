@@ -40,7 +40,7 @@
 					data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span> </button>
-      <a class="navbar-brand" href="{{asset('index.php')}}">Rebanho Web</a> </div>
+      <a class="navbar-brand" href="{{asset('/')}}">Rebanho Web</a> </div>
     <!-- /.navbar-header -->
     
     <ul class="nav navbar-top-links navbar-right">
@@ -138,11 +138,15 @@
 					data-toggle="dropdown" href="#"> <i class="fa fa-user fa-fw"></i> <i
 						class="fa fa-caret-down"></i> </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil do
-            usuário</a></li>
+        @if (Auth::guest())
+			<li><a href="{{asset('login')}}"><i class="fa fa-user fa-fw"></i>Login</a></li>
+			<li><a href="{{asset('register')}}"><i class="fa fa-user fa-fw"></i>Registrar</a></li>
+        @else
+          <li><a href="#"><i class="fa fa-user fa-fw"></i> {{ Auth::user()->name }}</a></li>
           <li><a href="#"><i class="fa fa-gear fa-fw"></i> Configurações</a> </li>
           <li class="divider"></li>
-          <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Sair</a></li>
+          <li><a href="{{asset('logout')}}"><i class="fa fa-sign-out fa-fw"></i> Sair</a></li>
+        @endif
         </ul>
         <!-- /.dropdown-user --></li>
       <!-- /.dropdown -->
@@ -160,7 +164,7 @@
               </span> </div>
             <!-- /input-group --> 
           </li>
-          <li><a href=""><i class="fa fa-dashboard fa-fw"></i> Painel de
+          <li><a href="{{asset('/')}}"><i class="fa fa-dashboard fa-fw"></i> Painel de
             controle</a></li>
           <li><a href="#"><i class="fa fa-navicon fa-fw"></i> Rebanho<span
 								class="fa arrow"></span></a>

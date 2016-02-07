@@ -4,6 +4,7 @@ namespace rebanhoweb\Http\Controllers;
 
 use DB;
 use Request;
+use Auth;
 use rebanhoweb\Leite;
 
 use rebanhoweb\Http\Requests\LeiteRequest;
@@ -11,7 +12,12 @@ use rebanhoweb\Http\Controllers\Controller;
 
 class LeiteController extends Controller
 {
-    public function relatorio()
+    public function __construct()
+	{
+		$this->middleware('auth');
+	}
+	
+	public function relatorio()
 	{
 		return view('leite.relatorio');
 	}
